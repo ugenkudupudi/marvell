@@ -1,7 +1,7 @@
 #!/bin/bash -x
 
 # env.sh should execute first
-. $HOME/env.sh
+. $HOME/marvell/env.sh
 
 # check for build directory
 if [[ x$BUILD_DIR_HOME != x ]] ; then
@@ -25,22 +25,22 @@ else
 exit 1
 fi
 
-source $HOME/unpack.sh
+source $TOOLS_HOME/unpack.sh
 if [[ $? -ne 0 ]] ; then
   exit $?
 fi
 
-source $HOME/kernel.sh
+source $TOOLS_HOME/kernel.sh
 if [[ $? -ne 0 ]] ; then
   exit $?
 fi
 
-source $HOME/musdk.sh
+source $TOOLS_HOME/musdk.sh
 if [[ $? -ne 0 ]] ; then
   exit $?
 fi
 
-source $HOME/dpdk.sh
+source $TOOLS_HOME/dpdk.sh
 if [[ $? -ne 0 ]] ; then
   exit $?
 fi
@@ -72,24 +72,23 @@ if [[ $? -ne 0 ]] ; then
 fi
 
 # build ovs and install under usr/local
-source $HOME/ovs.sh
+source $TOOLS_HOME/ovs.sh
 if [[ $? -ne 0 ]] ; then
   exit $?
 fi
 
 
 # setup scripts the can run on DUT
-if [[ ! -d $TFTPBOOT_DIR/root ]] ; then
-mkdir -p $TFTPBOOT_DIR/root
-cp $HOME/run.sh $TFTPBOOT_DIR/root
-cp $HOME/ovs_run.sh $TFTPBOOT_DIR/root
+if [[ -d $TFTPBOOT_DIR/root ]] ; then
+rm -rf $TFTPBOOT_DIR/root
 fi
+cp -r $TOOLS_HOME/root $TFTPBOOT_DIR
 
 if [[ ! -d $TFTPBOOT_DIR/boot ]] ; then
 mkdir -p $TFTPBOOT_DIR/boot
+fi
 cp $KDIR/arch/arm64/boot/Image $TFTPBOOT_DIR/boot
 cp $KDIR/arch/arm64/boot/dts/marvell/armada-8040-mcbin.dtb $TFTPBOOT_DIR/boot
-fi
 
 cd $TFTPBOOT_DIR
 if [[ $? -ne 0 ]] ; then

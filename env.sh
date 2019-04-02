@@ -1,5 +1,6 @@
 #!/bin/sh
 
+export TOOLS_HOME=$HOME/marvell
 export RELEASE_ID=19.06.0
 export BUILD_DIR_HOME=$HOME/mbin_build_dir_19_06_02
 export SDK_TARBALL=$HOME/SDK10.0_19.06.0_sdk-sources-patches.zip

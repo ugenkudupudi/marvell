@@ -58,7 +58,7 @@ if [[ $? -ne 0 ]] ; then
 fi #end of tar xvf
 
 # patch the linux kernel with musdk patches
-source patch.sh
+source $TOOLS_HOME/patch.sh
 if [[ $? -ne 0 ]] ; then
   exit $?
 fi #end of patch.sh
