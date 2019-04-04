@@ -1,10 +1,6 @@
-#!/bin/bash -x
+#!/bin/bash
 
-ROOTFS_LOCAL=rootfs_local
-ROOTFS_NAME=rootfs.ext4
-ROOTFS_SIZE=6G
-EXTRACT_PRIMARY_FS=~/a80x0/rootfs/buildroot-2018.11-19.01.0-armv8le.tgz
-
+source env.sh
 
 locate qemu-img
 if [[ $? -ne 0 ]] ; then
@@ -40,10 +36,21 @@ sudo tar zxvf  $EXTRACT_PRIMARY_FS .
 sudo mv rootfs/* .
 sudo rm -rf rootfs
 ls
-sudo tar zxvf /tftpboot/usr.tgz
+
+if [[ -f $DPDK_VANILLA_ROOTFS.tgz ]] ; then
+sudo tar zxvf $DPDK_VANILLA_ROOTFS.tgz
+else
+echo $DPDK_VANILLA_ROOTFS.tgz "missing" 
+exit 1
+fi
 
 cd -
 
 df -kh
 
 sudo umount $ROOTFS_LOCAL
+
+echo
+echo "ROOTFS is at" $ROOTFS_NAME
+echo
+
