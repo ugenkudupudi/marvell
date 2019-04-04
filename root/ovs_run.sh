@@ -2,6 +2,11 @@
 
 export PATH=/usr/local/bin:/usr/local/sbin:$PATH
 
+ip link set dev eth0 up
+ip link set dev eth1 up
+
+sleep 3
+
 cat /proc/mounts | grep -q hugetlbfs || \
   $(mkdir -p /mnt/huge; mount -t hugetlbfs nodev /mnt/huge)
 if [[ $? -ne 0 ]] ; then
@@ -14,10 +19,10 @@ if [[ $? -ne 0 ]] ; then
   exit $?
 fi
 
-insmod /usr/lib/modules/musdk/musdk_cma.ko
+insmod /usr/lib/modules/`uname -r`/kernel/drivers/musdk/musdk_cma.ko
 
 rmmod uio_pdrv_genirq.ko
-insmod /usr/lib/modules/4.14.76-devel-19.02.1/kernel/drivers/uio/uio_pdrv_genirq.ko of_id="generic-uio"
+insmod /usr/lib/modules/`uname -r`/kernel/drivers/uio/uio_pdrv_genirq.ko of_id="generic-uio"
 
 rm -rf /usr/local/var/run/openvswitch/ ; rm -rf /usr/local/etc/openvswitch/ ; mkdir -p /usr/local/var/run/openvswitch/ ; mkdir -p /usr/local/etc/openvswitch/ ; rm -f /tmp/conf.db ; mkdir -p /usr/local/etc/openvswitch ; mkdir -p /usr/local/var/run/openvswitch ; ovsdb-tool create /usr/local/etc/openvswitch/conf.db /usr/local/share/openvswitch/vswitch.ovsschema 
  
