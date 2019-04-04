@@ -96,7 +96,7 @@ if [[ $? -ne 0 ]] ; then
 fi
 
 # generate tarball that needs to be donwload from DUT
-tar zcvf usr.tgz usr root boot
+tar zcvf usr.tgz usr root boot lib
 if [[ $? -ne 0 ]] ; then
   exit $?
 fi
