@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/sh -x
 
 export TOOLS_HOME=$HOME/marvell
 export RELEASE_ID=19.06.0
@@ -7,7 +7,7 @@ export SDK_TARBALL=$HOME/SDK10.0_19.06.0_sdk-sources-patches.zip
 export DPDK_VERSION=dpdk-18.11-rc
 export LINUX_VERSION=linux-4.14.76-rc
 export TFTPBOOT_DIR=/tftpboot
-export MUSDK_INSTALL_DIR=$TFTPBOOT_DIR/usr/lib/modules/musdk
+export MUSDK_INSTALL_DIR=$TFTPBOOT_DIR/lib/modules/4.14.76-devel-19.02.1/kernel/drivers/musdk
 
 export BASE_SOURCE=base-sources-rc
 export DATAPLANE_SOURCE=dataplane-sources-rc
