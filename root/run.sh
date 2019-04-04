@@ -17,17 +17,18 @@ if [[ $? -ne 0 ]] ; then
   exit $?
 fi
 
-insmod /usr/lib/modules/musdk/musdk_cma.ko
+rmmod musdk_cma.ko
+insmod /lib/modules/`uname -r`/kernel/drivers/musdk/musdk_cma.ko
 if [[ $? -ne 0 ]] ; then
   exit $?
 fi
 
 rmmod uio_pdrv_genirq.ko
-insmod /usr/lib/modules/4.14.76-devel-19.02.1/kernel/drivers/uio/uio_pdrv_genirq.ko of_id="generic-uio"
+insmod /lib/modules/`uname -r`/kernel/drivers/uio/uio_pdrv_genirq.ko of_id="generic-uio"
 if [[ $? -ne 0 ]] ; then
   exit $?
 fi
 
-/usr/local/dpdk/bin/testpmd --vdev=net_mvpp2,iface=eth0,iface=eth1 -c f -- \
+testpmd --vdev=net_mvpp2,iface=eth0,iface=eth1 -c f -- \
   --burst=256 --txd=2048 --rxd=1024 --rxq=1 --txq=1 --nb-cores=1 \
   --coremask 2 -a --forward-mode=io
