@@ -15,6 +15,7 @@ fi
 
 #sdk 19.06
 make marvell_v8_sdk_defconfig
+#make ARCH=arm64 menuconfig
 if [[ $? -ne 0 ]] ; then
   exit $?
 fi
@@ -34,7 +35,7 @@ if [[ $? -ne 0 ]] ; then
   exit $?
 fi
 
-make modules_install INSTALL_MOD_PATH=$TFTPBOOT_DIR/usr
+make modules_install INSTALL_MOD_PATH=$TFTPBOOT_DIR
 if [[ $? -ne 0 ]] ; then
   exit $?
 fi
