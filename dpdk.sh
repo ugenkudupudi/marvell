@@ -7,9 +7,11 @@ if [[ $? -ne 0 ]] ; then
   exit $?
 fi
 
-make config T=arm64-armada-linuxapp-gcc
-if [[ $? -ne 0 ]] ; then
-  exit $?
+if [[ ! -f config/.config ]]; then
+   make config T=arm64-armada-linuxapp-gcc
+   if [[ $? -ne 0 ]] ; then
+     exit $?
+   fi
 fi
 
 make -j8
