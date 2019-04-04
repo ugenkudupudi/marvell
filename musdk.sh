@@ -1,5 +1,9 @@
 #!/bin/bash -x
 
+if [[ ! -d $MUSDK_INSTALL_DIR ]] ; then
+  mkdir -p $MUSDK_INSTALL_DIR
+fi
+
 echo "Build MUSDK... "
 
 cd $LIBMUSDK_HOME_PATH/modules/cma
@@ -11,10 +15,6 @@ make
 if [[ $? -ne 0 ]] ; then
   exit $?
 fi
-
-if [[ ! -d $MUSDK_INSTALL_DIR ]] ; then 
-  mkdir -p $MUSDK_INSTALL_DIR
-fi 
 
 cp musdk_cma.ko $MUSDK_INSTALL_DIR
 if [[ $? -ne 0 ]] ; then
