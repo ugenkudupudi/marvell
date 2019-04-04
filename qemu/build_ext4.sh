@@ -7,17 +7,20 @@ if [[ $? -ne 0 ]] ; then
    sudo apt install qemu-utils -y
 fi
 
-if [[ ! -f $ROOTFS_NAME ]] ; then 
-   qemu-img create $ROOTFS_NAME $ROOTFS_SIZE
-   if [[ $? -ne 0 ]] ; then
-	exit 1;
-   fi # end of qemu-img
-
-   mkfs.ext4 $ROOTFS_NAME
-   if [[ $? -ne 0 ]] ; then
-	exit 1;
-   fi
+# remove old rootfs
+if [[ -f $ROOTFS_NAME ]] ; then 
+   rm -rf $ROOTFS_NAME 
 fi # end of -f
+
+qemu-img create $ROOTFS_NAME $ROOTFS_SIZE
+if [[ $? -ne 0 ]] ; then
+    exit 1;
+fi # end of qemu-img
+
+mkfs.ext4 $ROOTFS_NAME
+if [[ $? -ne 0 ]] ; then
+   exit 1;
+fi
 
 if [[ ! -d $ROOTFS_LOCAL ]] ; then
 	mkdir -p $ROOTFS_LOCAL
@@ -54,3 +57,8 @@ echo
 echo "ROOTFS is at" $ROOTFS_NAME
 echo
 
+echo "Helpfull Commands:"
+echo "------------------"
+echo 
+echo "scp ugen@10.89.241.40:/tftpboot/rootfs.ext4 ."
+echo

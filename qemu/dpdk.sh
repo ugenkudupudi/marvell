@@ -1,4 +1,4 @@
-#!/bin/bash -x
+#!/bin/bash
 
 source env.sh
 
@@ -17,21 +17,26 @@ if [[ ! -d ${DPDK_VANILLA_DIR} ]] ; then
    fi 
 fi 
 
-echo "Build DPDK... "
+echo "Build Vanilla DPDK... "
 cd $DPDK_VANILLA_DIR
 if [[ $? -ne 0 ]] ; then
   exit $?
 fi
 
+echo "Copy Armada DPDK config file... "
 if [[ ! -f config/defconfig_$DPDK_VANILLA_TARGET ]] ; then
    cp $DPDK_HOME/config/defconfig_$DPDK_VANILLA_TARGET config/
 fi
 
+if [[ ! -f config/.config ]]; then
+echo "Set Armada DPDK config"
 make config T=$DPDK_VANILLA_TARGET
 if [[ $? -ne 0 ]] ; then
   exit $?
 fi
+fi
 
+echo "Build Vanilla DPDK for" $ARCH
 make -j8
 if [[ $? -ne 0 ]] ; then
   exit $?
@@ -43,6 +48,7 @@ if [[ $? -ne 0 ]] ; then
   exit $?
 fi
 
+echo "Build Vanilla DPDK examples for" $ARCH
 make -j8 examples T=$DPDK_VANILLA_TARGET
 if [[ $? -ne 0 ]] ; then
   exit $?
@@ -52,14 +58,15 @@ if [[ ! -d $DPDK_VANILLA_ROOTFS ]] ; then
 mkdir -p $DPDK_VANILLA_ROOTFS
 fi
 
+echo "Install the final Vanilla binaries and libs for" $ARCH
 make install DESTDIR=$DPDK_VANILLA_ROOTFS
 if [[ $? -ne 0 ]] ; then
   exit $?
 fi
 
 cd .. 
-#rm -rf $DPDK_VANILLA_ROOTFS/usr/local/share/dpdk/examples
 
+echo "Create" $DPDK_VANILLA_ROOTFS "rootfs"
 cd $DPDK_VANILLA_ROOTFS/
 
 tar zcvf $DPDK_VANILLA_ROOTFS.tgz *
@@ -68,3 +75,6 @@ if [[ $? -ne 0 ]] ; then
 fi
 
 rm -rf $DPDK_VANILLA_ROOTFS
+echo
+echo "Vanilla DPDK binaries and libs for" $ARCH "is at" $DPDK_VANILLA_ROOTFS.tgz 
+echo 
