@@ -25,7 +25,14 @@ fi
 
 echo "Copy Armada DPDK config file... "
 if [[ ! -f config/defconfig_$DPDK_VANILLA_TARGET ]] ; then
-   cp $DPDK_HOME/config/defconfig_$DPDK_VANILLA_TARGET config/
+   cp $DPDK_HOME/config/defconfig_$DPDK_VANILLA_TARGET $DPDK_VANILLA_DIR/config/
+if [[ $? -ne 0 ]] ; then
+  exit $?
+fi
+   cp $DPDK_HOME/config/arm/arm64_armada_linuxapp_gcc $DPDK_VANILLA_DIR/config/arm/
+if [[ $? -ne 0 ]] ; then
+  exit $?
+fi
 fi
 
 if [[ ! -f config/.config ]]; then
@@ -48,11 +55,11 @@ if [[ $? -ne 0 ]] ; then
   exit $?
 fi
 
-echo "Build Vanilla DPDK examples for" $ARCH
-make -j8 examples T=$DPDK_VANILLA_TARGET
-if [[ $? -ne 0 ]] ; then
-  exit $?
-fi
+#echo "Build Vanilla DPDK examples for" $ARCH
+#make -j8 examples T=$DPDK_VANILLA_TARGET
+#if [[ $? -ne 0 ]] ; then
+#  exit $?
+#fi
 
 if [[ ! -d $DPDK_VANILLA_ROOTFS ]] ; then
 mkdir -p $DPDK_VANILLA_ROOTFS

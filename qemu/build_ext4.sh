@@ -2,6 +2,11 @@
 
 source env.sh
 
+source dpdk.sh
+if [[ $? -ne 0 ]] ; then
+   exit 1;
+fi
+
 locate qemu-img
 if [[ $? -ne 0 ]] ; then
    sudo apt install qemu-utils -y
@@ -28,30 +33,60 @@ fi
 
 sudo mount -o loop $ROOTFS_NAME $ROOTFS_LOCAL
 if [[ $? -ne 0 ]] ; then
-	exit 1;
+   exit 1;
 fi
 
 # TBD: add your extraction code here
 cd $ROOTFS_LOCAL
+if [[ $? -ne 0 ]] ; then
+   sudo umount $ROOTFS_LOCAL
+   exit 1;
+fi
+
 
 sudo tar zxvf  $EXTRACT_PRIMARY_FS .
+if [[ $? -ne 0 ]] ; then
+   sudo umount $ROOTFS_LOCAL
+   exit 1;
+fi
 
 sudo mv rootfs/* .
+if [[ $? -ne 0 ]] ; then
+   sudo umount $ROOTFS_LOCAL
+   exit 1;
+fi
+
 sudo rm -rf rootfs
-ls
+if [[ $? -ne 0 ]] ; then
+   sudo umount $ROOTFS_LOCAL
+   exit 1;
+fi
 
 if [[ -f $DPDK_VANILLA_ROOTFS.tgz ]] ; then
-sudo tar zxvf $DPDK_VANILLA_ROOTFS.tgz
-else
+   #sudo tar zxvf $DPDK_VANILLA_ROOTFS.tgz
+   sudo cp $DPDK_VANILLA_ROOTFS.tgz root
+   if [[ $? -ne 0 ]] ; then
+      sudo umount $ROOTFS_LOCAL
+      exit 1;
+   fi
+else # end if -f 
 echo $DPDK_VANILLA_ROOTFS.tgz "missing" 
+sudo umount $ROOTFS_LOCAL
 exit 1
 fi
 
-cd -
+cd $WORK_DIR
+if [[ $? -ne 0 ]] ; then
+   sudo umount $ROOTFS_LOCAL
+   exit 1;
+fi
 
 df -kh
 
 sudo umount $ROOTFS_LOCAL
+if [[ $? -ne 0 ]] ; then
+   exit 1;
+fi
 
 echo
 echo "ROOTFS is at" $ROOTFS_NAME
