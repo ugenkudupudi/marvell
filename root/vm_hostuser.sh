@@ -1,8 +1,8 @@
 #!/bin/bash -x
 
 export VHOST_SOCK_DIR=/usr/local/var/run/openvswitch
-VHOST_USER_SOCKET_PATH_1=$VHOST_SOCK_DIR/vhostusersocket1.sock
-VHOST_USER_SOCKET_PATH_2=$VHOST_SOCK_DIR/vhostusersocket2.sock
+VHOST_USER_SOCKET_PATH_1=$VHOST_SOCK_DIR/dpdkvhostuser0
+VHOST_USER_SOCKET_PATH_2=$VHOST_SOCK_DIR/dpdkvhostuser1
 
 QEMU_CMD=qemu-system-aarch64
 if [[ ! -f /usr/bin/$QEMU_CMD ]] ; then
@@ -23,9 +23,9 @@ $QEMU_CMD -name vm \
 -drive file=/root/rootfs.ext4,if=none,id=disk1,format=raw  \
 -device virtio-blk-device,scsi=off,drive=disk1,id=virtio-disk1,bootindex=1 \
 -serial stdio \
--chardev socket,id=char1,path=$VHOST_USER_SOCKET_PATH_1,server \
+-chardev socket,id=char1,path=$VHOST_USER_SOCKET_PATH_1 \
 -netdev type=vhost-user,id=mynet1,chardev=char1,vhostforce \
--device virtio-net-pci,mac=00:00:00:00:00:01,netdev=mynet1 \
--chardev socket,id=char2,path=$VHOST_USER_SOCKET_PATH_2,server \
+-device virtio-net-pci,mac=00:00:00:00:00:01,netdev=mynet1,mrg_rxbuf=off \
+-chardev socket,id=char2,path=$VHOST_USER_SOCKET_PATH_2 \
 -netdev type=vhost-user,id=mynet2,chardev=char2,vhostforce \
--device virtio-net-pci,mac=00:00:00:00:00:02,netdev=mynet2 \
+-device virtio-net-pci,mac=00:00:00:00:00:02,netdev=mynet2,mrg_rxbuf=off \
