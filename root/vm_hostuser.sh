@@ -17,6 +17,7 @@ $QEMU_CMD -name vm \
 -cpu host -m $GUEST_MEM \
 -smp sockets=1,cores=2,threads=1 \
 -object memory-backend-file,id=mem,size=$GUEST_MEM,mem-path=/mnt/huge,share=yes \
+-numa node,memdev=mem -mem-prealloc \
 -nographic -nodefaults \
 -kernel /boot/Image \
 -append "root=/dev/vda console=ttyAMA0 rw" \
