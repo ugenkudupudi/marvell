@@ -58,14 +58,14 @@ if [[ $? -ne 0 ]] ; then
   exit $?
 fi
 
-rm -f /usr/local/etc/openvswitch/conf.db 
+rm -f /usr/local/etc/openvswitch/conf.db
 
-mkdir -p /usr/local/etc/openvswitch ; 
+mkdir -p /usr/local/etc/openvswitch
 if [[ $? -ne 0 ]] ; then
   exit $?
 fi
 
-mkdir -p /usr/local/var/run/openvswitch ; 
+mkdir -p /usr/local/var/run/openvswitch
 if [[ $? -ne 0 ]] ; then
   exit $?
 fi
@@ -77,7 +77,6 @@ if [[ $? -ne 0 ]] ; then
   exit $?
 fi
 
- 
 ovsdb-server --remote=punix:/usr/local/var/run/openvswitch/db.sock --remote=db:Open_vSwitch,Open_vSwitch,manager_options --pidfile --detach ; 
 if [[ $? -ne 0 ]] ; then
   exit $?
@@ -95,7 +94,7 @@ if [[ $? -ne 0 ]] ; then
   exit $?
 fi
  
-ovs-vsctl --no-wait set Open_vSwitch . other_config:dpdk-socket-mem="2048" ; 
+ovs-vsctl --no-wait set Open_vSwitch . other_config:dpdk-socket-mem="2048"
 if [[ $? -ne 0 ]] ; then
   exit $?
 fi
@@ -109,4 +108,3 @@ fi
 #if [[ $? -ne 0 ]] ; then
 #  exit $?
 #fi
-
