@@ -37,27 +37,28 @@ if [[ $? -ne 0 ]] ; then
 fi
 
 
-rm -rf /usr/local/var/run/openvswitch/ ; 
+# cleanup old OVS configuration
+rm -rf /usr/local/var/run/openvswitch
 if [[ $? -ne 0 ]] ; then
   exit $?
 fi
 
-rm -rf /usr/local/etc/openvswitch/ ; 
+rm -rf /usr/local/etc/openvswitch
 if [[ $? -ne 0 ]] ; then
   exit $?
 fi
 
-mkdir -p /usr/local/var/run/openvswitch/ ; 
+mkdir -p /usr/local/var/run/openvswitch
 if [[ $? -ne 0 ]] ; then
   exit $?
 fi
 
-mkdir -p /usr/local/etc/openvswitch/ ; 
+mkdir -p /usr/local/etc/openvswitch
 if [[ $? -ne 0 ]] ; then
   exit $?
 fi
 
-rm -f /tmp/conf.db ; 
+rm -f /usr/local/etc/openvswitch/conf.db 
 
 mkdir -p /usr/local/etc/openvswitch ; 
 if [[ $? -ne 0 ]] ; then
@@ -68,6 +69,8 @@ mkdir -p /usr/local/var/run/openvswitch ;
 if [[ $? -ne 0 ]] ; then
   exit $?
 fi
+
+# Initialize OVS
 
 ovsdb-tool create /usr/local/etc/openvswitch/conf.db /usr/local/share/openvswitch/vswitch.ovsschema 
 if [[ $? -ne 0 ]] ; then
