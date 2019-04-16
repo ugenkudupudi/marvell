@@ -1,5 +1,4 @@
-# marvell
-Marvell SDK tools
+# Marvell SDK tools
 
 Directory and Files:
 
