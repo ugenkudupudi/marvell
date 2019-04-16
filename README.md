@@ -14,8 +14,8 @@ Directory and Files:
     * **build.sh** : Automatically builds Linux Kernel, MUSDK, DPDK (with MUSDK support) and OVS. Path to tarballs and build directories are present in env.sh
     
 2.	**marvell/root** : Holds the scripts executed on DUT. Has support for Vanilla DPDK and DPDK+OVS
-    * **run.sh** : DPDK test setup (phy to phy)
-    * **ovs_run.sh** : OVS+DPDK test setup (phy to phy)
+    * run.sh : DPDK test setup (phy to phy)
+    * ovs_run.sh : OVS+DPDK test setup (phy to phy)
     * **ovspvp.sh** : OVS+DPDK PVP test setup (phy to vm to phy)
         1. **vm.sh** : run the guest host with vhost-user-client support (preferred)
         2. vm_userhost.sh : run the guest host with vhost-user support
