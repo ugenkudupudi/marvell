@@ -3,7 +3,7 @@
 
 ![MACCHIATObin PVP Setup](https://user-images.githubusercontent.com/15847985/56220807-b29c9080-6086-11e9-8e64-98b070bde330.PNG)
 
-# Marvell SDK tools
+# Automation scripts for Marvell SDK
 
 Directory and Files:
 
