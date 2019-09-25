@@ -1,0 +1,70 @@
+diff -ru openvswitch-2.11.1/libtool openvswitch-2.11.1.new/libtool
+--- openvswitch-2.11.1/libtool	2019-09-25 19:29:55.276406432 +0530
++++ openvswitch-2.11.1.new/libtool	2019-09-25 19:29:24.407655538 +0530
+@@ -153,7 +153,7 @@
+ STRIP="aarch64-marvell-linux-gnu-strip"
+ 
+ # Commands used to install an old-style archive.
+-RANLIB="aarch64-marvell-linux-gnu-ranlib"
++RANLIB="/home/ugen/work_cn83xx_SDK10.0-PR2003/marvell-tools-238.0/bin/aarch64-marvell-linux-gnu-ranlib"
+ old_postinstall_cmds="chmod 644 \$oldlib~\$RANLIB \$tool_oldlib"
+ old_postuninstall_cmds=""
+ 
+diff -ru openvswitch-2.11.1/lib/netdev-dpdk.c openvswitch-2.11.1.new/lib/netdev-dpdk.c
+--- openvswitch-2.11.1/lib/netdev-dpdk.c	2019-04-11 08:07:57.481536795 +0530
++++ openvswitch-2.11.1.new/lib/netdev-dpdk.c	2019-09-25 19:26:43.103127829 +0530
+@@ -82,6 +82,11 @@
+  * The minimum mbuf size is limited to avoid scatter behaviour and drop in
+  * performance for standard Ethernet MTU.
+  */
++#define ETHER_HDR_LEN RTE_ETHER_HDR_LEN
++#define ETHER_CRC_LEN RTE_ETHER_CRC_LEN
++#define ETHER_MTU RTE_ETHER_MTU
++#define ETHER_MIN_MTU RTE_ETHER_MIN_MTU
++
+ #define ETHER_HDR_MAX_LEN           (ETHER_HDR_LEN + ETHER_CRC_LEN \
+                                      + (2 * VLAN_HEADER_LEN))
+ #define MTU_TO_FRAME_LEN(mtu)       ((mtu) + ETHER_HDR_LEN + ETHER_CRC_LEN)
+@@ -1031,7 +1036,7 @@
+ {
+     struct rte_pktmbuf_pool_private *mbp_priv;
+     struct rte_eth_dev_info info;
+-    struct ether_addr eth_addr;
++    struct rte_ether_addr eth_addr;
+     int diag;
+     int n_rxq, n_txq;
+     uint32_t rx_chksm_offload_capa = DEV_RX_OFFLOAD_UDP_CKSUM |
+@@ -1664,7 +1669,7 @@
+     }
+ 
+     RTE_ETH_FOREACH_DEV (port_id) {
+-        struct ether_addr ea;
++        struct rte_ether_addr ea;
+ 
+         rte_eth_macaddr_get(port_id, &ea);
+         memcpy(port_mac.ea, ea.addr_bytes, ETH_ADDR_LEN);
+@@ -2032,10 +2037,10 @@
+                                struct rte_meter_srtcm_profile *profile,
+                                struct rte_mbuf *pkt, uint64_t time)
+ {
+-    uint32_t pkt_len = rte_pktmbuf_pkt_len(pkt) - sizeof(struct ether_hdr);
++    uint32_t pkt_len = rte_pktmbuf_pkt_len(pkt) - sizeof(struct rte_ether_hdr);
+ 
+     return rte_meter_srtcm_color_blind_check(meter, profile, time, pkt_len) ==
+-                                             e_RTE_METER_GREEN;
++                                             RTE_COLOR_GREEN;
+ }
+ 
+ static int
+diff -ru openvswitch-2.11.1/lib/dpdk.c openvswitch-2.11.1.new/lib/dpdk.c
+--- openvswitch-2.11.1/lib/dpdk.c	2019-03-26 03:31:59.076459587 +0530
++++ openvswitch-2.11.1.new/lib/dpdk.c	2019-09-25 19:26:43.103127829 +0530
+@@ -426,7 +426,7 @@
+ 
+ #ifdef DPDK_PDUMP
+     VLOG_INFO("DPDK pdump packet capture enabled");
+-    err = rte_pdump_init(ovs_rundir());
++    err = rte_pdump_init();
+     if (err) {
+         VLOG_INFO("Error initialising DPDK pdump");
+         rte_pdump_uninit();

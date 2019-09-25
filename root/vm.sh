@@ -24,9 +24,9 @@ $QEMU_CMD -name vm \
 -drive file=/root/rootfs.ext4,if=none,id=disk1,format=raw  \
 -device virtio-blk-device,scsi=off,drive=disk1,id=virtio-disk1,bootindex=1 \
 -serial stdio \
--chardev socket,id=char1,path=$VHOST_USER_SOCKET_PATH_1,server \
--netdev type=vhost-user,id=mynet1,chardev=char1,vhostforce \
--device virtio-net-pci,mac=00:00:00:00:00:01,netdev=mynet1 \
--chardev socket,id=char2,path=$VHOST_USER_SOCKET_PATH_2,server \
--netdev type=vhost-user,id=mynet2,chardev=char2,vhostforce \
--device virtio-net-pci,mac=00:00:00:00:00:02,netdev=mynet2 \
+#-chardev socket,id=char1,path=$VHOST_USER_SOCKET_PATH_1,server \
+#-netdev type=vhost-user,id=mynet1,chardev=char1,vhostforce \
+#-device virtio-net-pci,mac=00:00:00:00:00:01,netdev=mynet1 \
+#-chardev socket,id=char2,path=$VHOST_USER_SOCKET_PATH_2,server \
+#-netdev type=vhost-user,id=mynet2,chardev=char2,vhostforce \
+#-device virtio-net-pci,mac=00:00:00:00:00:02,netdev=mynet2 \

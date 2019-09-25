@@ -2,13 +2,13 @@
 
 #mode="hostuser"
 
-lsmod | grep musdk_cma
-if [[ $? -ne 0 ]] ; then
-    source ovspvp_setup.sh 
-    if [[ $? -ne 0 ]] ; then
-       exit $?
-    fi
-fi
+#lsmod | grep musdk_cma
+#if [[ $? -ne 0 ]] ; then
+#    source ovspvp_setup.sh 
+#    if [[ $? -ne 0 ]] ; then
+#       exit $?
+#    fi
+#fi
 
 ovs-vsctl --if-exists del-br br0
 

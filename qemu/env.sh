@@ -8,7 +8,9 @@ WORK_DIR=$HOME/marvell/qemu
 ROOTFS_LOCAL=$WORK_DIR/rootfs_local
 ROOTFS_NAME=$TFTPBOOT_DIR/rootfs.ext4
 ROOTFS_SIZE=2G
-EXTRACT_PRIMARY_FS=$HOME/a80x0/rootfs/buildroot-2018.11-19.01.0-armv8le.tgz
+#EXTRACT_PRIMARY_FS=$BUILD_DIR_HOME/${SOC_PLATFORM}-release-output/image/rootfs.tar
+EXTRACT_PRIMARY_FS=/home/ugen/build_cn83xx/cn83xx/rootfs-SDK10.0-PR2003.tar
+
 
 # dpdk
 DPDK_VANILLA_VERSION=18.11

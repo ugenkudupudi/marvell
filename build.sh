@@ -30,6 +30,12 @@ if [[ $? -ne 0 ]] ; then
   exit $?
 fi
 
+if [[ x$SOC_PLATFORM =~ ^xcn8[1,3]xx$ ]] ; then
+   source $TOOLS_HOME/buildroot.sh
+   if [[ $? -ne 0 ]] ; then
+      exit $?
+   fi
+else
 source $TOOLS_HOME/kernel.sh
 if [[ $? -ne 0 ]] ; then
   exit $?

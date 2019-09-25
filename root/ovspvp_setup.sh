@@ -10,31 +10,11 @@ export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
 ip link set dev eth0 up
 ip link set dev eth1 up
 
-#sleep 3
-
-cat /proc/mounts | grep -q hugetlbfs || \
-  $(mkdir -p /mnt/huge; mount -t hugetlbfs nodev /mnt/huge)
-if [[ $? -ne 0 ]] ; then
-  exit $?
-fi
-
-echo 1024 > /sys/kernel/mm/hugepages/hugepages-2048kB/nr_hugepages
-if [[ $? -ne 0 ]] ; then
-  exit $?
-fi
-
-rmmod musdk_cma.ko
-insmod /lib/modules/`uname -r`/kernel/drivers/musdk/musdk_cma.ko
-if [[ $? -ne 0 ]] ; then
-  exit $?
-fi
-
-
-rmmod uio_pdrv_genirq.ko
-insmod /lib/modules/`uname -r`/kernel/drivers/uio/uio_pdrv_genirq.ko of_id="generic-uio"
-if [[ $? -ne 0 ]] ; then
-  exit $?
-fi
+sleep 3
+echo 2048 > /proc/sys/vm/nr_hugepages
+mkdir -p /dev/hugepages
+mount -t hugetlbfs nodev /dev/hugepages
+grep HugePages_ /proc/meminfo
 
 
 # cleanup old OVS configuration
@@ -94,7 +74,7 @@ if [[ $? -ne 0 ]] ; then
   exit $?
 fi
  
-ovs-vsctl --no-wait set Open_vSwitch . other_config:dpdk-socket-mem="2048"
+ovs-vsctl --no-wait set Open_vSwitch . other_config:dpdk-socket-mem="8192"
 if [[ $? -ne 0 ]] ; then
   exit $?
 fi

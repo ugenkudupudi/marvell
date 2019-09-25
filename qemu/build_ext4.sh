@@ -2,9 +2,13 @@
 
 source env.sh
 
+if [[ x$SOC_PLATFORM =~ ^xcn8[1,3]xx$ ]] ; then
+    echo 
+else
 source dpdk.sh
 if [[ $? -ne 0 ]] ; then
    exit 1;
+fi
 fi
 
 locate qemu-img
@@ -43,37 +47,40 @@ if [[ $? -ne 0 ]] ; then
    exit 1;
 fi
 
-
-sudo tar zxvf  $EXTRACT_PRIMARY_FS .
+sudo tar xvf $EXTRACT_PRIMARY_FS .
 if [[ $? -ne 0 ]] ; then
    sudo umount $ROOTFS_LOCAL
    exit 1;
 fi
 
-sudo mv rootfs/* .
-if [[ $? -ne 0 ]] ; then
-   sudo umount $ROOTFS_LOCAL
-   exit 1;
-fi
+if [[ x$SOC_PLATFORM =~ ^xcn8[1,3]xx$ ]] ; then
+    echo 
+else
+    sudo mv rootfs/* .
+    if [[ $? -ne 0 ]] ; then
+       sudo umount $ROOTFS_LOCAL
+       exit 1;
+    fi
 
-sudo rm -rf rootfs
-if [[ $? -ne 0 ]] ; then
-   sudo umount $ROOTFS_LOCAL
-   exit 1;
-fi
+    sudo rm -rf rootfs
+    if [[ $? -ne 0 ]] ; then
+       sudo umount $ROOTFS_LOCAL
+       exit 1;
+    fi
 
-if [[ -f $DPDK_VANILLA_ROOTFS.tgz ]] ; then
-   #sudo tar zxvf $DPDK_VANILLA_ROOTFS.tgz
-   sudo cp $DPDK_VANILLA_ROOTFS.tgz root
-   if [[ $? -ne 0 ]] ; then
-      sudo umount $ROOTFS_LOCAL
-      exit 1;
-   fi
-else # end if -f 
-echo $DPDK_VANILLA_ROOTFS.tgz "missing" 
-sudo umount $ROOTFS_LOCAL
-exit 1
-fi
+    if [[ -f $DPDK_VANILLA_ROOTFS.tgz ]] ; then
+       #sudo tar zxvf $DPDK_VANILLA_ROOTFS.tgz
+       sudo cp $DPDK_VANILLA_ROOTFS.tgz root
+       if [[ $? -ne 0 ]] ; then
+          sudo umount $ROOTFS_LOCAL
+          exit 1;
+       fi
+    else # end if -f 
+        echo $DPDK_VANILLA_ROOTFS.tgz "missing" 
+        sudo umount $ROOTFS_LOCAL
+        exit 1
+    fi # endif of if  -f $DPDK_VANILLA_ROOTFS.tgz
+fi # endif of SOC_PLATFORM != cn83xx
 
 cd $WORK_DIR
 if [[ $? -ne 0 ]] ; then
