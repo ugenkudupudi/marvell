@@ -29,8 +29,8 @@ Directory and Files:
     * **run.sh** : Sets up the DPDK env and runs the testpmd app (phy to vm to phy)
     * testpmd.sh : Runs only the testpmd app (phy to vm to phy)
 
-DB
-
+**DB**
+```
 ovs-vsctl list open_vswitch
 ovs-vsctl list interface
 ovs-vsctl --columns=ofport,name list Interface
@@ -50,8 +50,9 @@ ovs-vsctl clear Bridge br0 stp_enable
 
 ovs-vsctl --may-exist add-br br0 -- set bridge br0 datapath_type=netdev
 ovs-vsctl --if-exists del-br br0
-Flows
-
+```
+**Flows**
+```
 ovs-ofctl dump-flows br-int
 
 # include hidden flows
@@ -72,8 +73,9 @@ ovs-dpctl dump-flows
 ovs-appctl dpctl/dump-flows
 ovs-appctl dpctl/dump-flows system@ovs-system
 ovs-appctl dpctl/dump-flows netdev@ovs-netdev
-DPDK
-
+```
+**DPDK**
+```
 ovs-appctl dpif/show
 ovs-ofctl dump-ports br-int
 ovs-appctl dpctl/dump-flows
@@ -81,15 +83,17 @@ ovs-appctl dpctl/show --statistics
 ovs-appctl dpif-netdev/pmd-stats-show
 ovs-appctl dpif-netdev/pmd-stats-clear
 ovs-appctl dpif-netdev/pmd-rxq-show
-Debug log
-
+```
+**Debug log**
+```
 ovs-appctl vlog/list | grep dpdk
 ovs-appctl vlog/set dpdk:file:dbg
 
 # log openflow
 ovs-appctl vlog/set vconn:file:dbg
-Misc
-
+```
+**Misc**
+```
 ovs-appctl list-commands
 ovs-appctl fdb/show brbm
 
@@ -106,3 +110,5 @@ top -p `pidof ovs-vswitchd` -H -d1
 ovs-appctl dpctl/show -s
 ovs-appctl memory/show
 ovs-appctl upcall/show
+
+```
