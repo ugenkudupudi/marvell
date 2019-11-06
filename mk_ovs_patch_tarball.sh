@@ -1,0 +1,2 @@
+
+tar zcvf ovs_buildroot_v2.tgz base-sources-SDK10.0-PR2003/openvswitch/sources-openvswitch-2.11.1-SDK10.0-PR2003.tar.bz2 buildroot-external-marvell/package/openvswitch/openvswitch.mk buildroot-external-marvell/package/openvswitch/openvswitch.hash buildroot-external-marvell/package/openvswitch/Config.in buildroot-external-marvell/Config.in buildroot-external-marvell/configs.mv_frag/frag_list buildroot-external-marvell/configs.mv_frag/f_mv_set_openvswitch
