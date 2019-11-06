@@ -112,3 +112,12 @@ ovs-appctl memory/show
 ovs-appctl upcall/show
 
 ```
+
+Main:
+http://docs.openvswitch.org/en/latest/topics/dpdk/
+
+Sub:
+http://docs.openvswitch.org/en/latest/topics/dpdk/memory/
+http://docs.openvswitch.org/en/latest/topics/dpdk/bridge/
+https://doc.dpdk.org/guides-16.04/linux_gsg/nic_perf_intel_platform.html
+https://www.dpdk.org/wp-content/uploads/sites/35/2018/06/DPDK-China2017-Lou-Network-Performance-Tuning.pdf
