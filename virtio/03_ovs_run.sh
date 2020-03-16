@@ -2,7 +2,7 @@
 
 export PATH=/usr/local/bin:/usr/local/sbin:$PATH
 
-CPU_CORE=12
+CPU_CORE=2
 
 ENABLE_SMC=n
 
@@ -14,7 +14,7 @@ ovsdb-server --remote=punix:/usr/local/var/run/openvswitch/db.sock --remote=db:O
 
 export DB_SOCK=/usr/local/var/run/openvswitch/db.sock 
 
-./txcsr_83xx NIC_PF_CQM_CFG == 0x80
+#~/cn83xx/txcsr_83xx NIC_PF_CQM_CFG == 0x80
 
 # This value should be set before setting dpdk-init=true. 
 #ovs-vsctl --no-wait set Open_vSwitch . other_config:per-port-memory=true
@@ -46,6 +46,9 @@ ovs-vsctl --no-wait set Open_vSwitch . other_config:pmd-cpu-mask=0x7ffdc
 elif [[ $CPU_CORE == "8" ]]; then 
 # 8 cores
 ovs-vsctl --no-wait set Open_vSwitch . other_config:pmd-cpu-mask=0x7dc
+elif [[ $CPU_CORE == "2" ]]; then 
+echo ""
+#ovs-vsctl --no-wait set Open_vSwitch . other_config:pmd-cpu-mask=0x3
 else
 echo "Please define CPU_CORE"
 exit 1
@@ -53,17 +56,25 @@ fi
 
 ovs-vsctl add-br br0 -- set Bridge br0 datapath_type=netdev 
 
-ovs-vsctl add-port br0 wan0 -- set Interface wan0 type=dpdkvhostuser \
-    options:dpdk-devargs=0001:01:00.1
+ovs-vsctl add-port br0 wan0 -- set Interface wan0 type=dpdk \
+    options:dpdk-devargs=0001:01:00.1 
 
-ovs-vsctl add-port br0 wan1 -- set Interface wan1 type=dpdkvhostuser \
-    options:dpdk-devargs=0001:01:00.2
+ovs-vsctl add-port br0 vhostwan0 -- set Interface vhostwan0 type=dpdkvhostuser 
 
-ovs-vsctl add-port br0 wan2 -- set Interface wan2 type=dpdkvhostuser \
-    options:dpdk-devargs=0001:01:00.3
+ovs-vsctl add-port br0 wan1 -- set Interface wan1 type=dpdk \
+    options:dpdk-devargs=0001:01:00.2 
 
-ovs-vsctl add-port br0 wan3 -- set Interface wan3 type=dpdkvhostuser \
-    options:dpdk-devargs=0001:01:00.4
+ovs-vsctl add-port br0 vhostwan1 -- set Interface vhostwan1 type=dpdkvhostuser 
+
+ovs-vsctl add-port br0 wan2 -- set Interface wan2 type=dpdk \
+    options:dpdk-devargs=0001:01:00.3 
+
+ovs-vsctl add-port br0 vhostwan2 -- set Interface vhostwan2 type=dpdkvhostuser 
+
+ovs-vsctl add-port br0 wan3 -- set Interface wan3 type=dpdk \
+    options:dpdk-devargs=0001:01:00.4 
+
+ovs-vsctl add-port br0 vhostwan3 -- set Interface vhostwan3 type=dpdkvhostuser 
 
 if [[ $CPU_CORE == "16" ]]; then 
 # 4 queues and 16 cores
@@ -83,6 +94,8 @@ ovs-vsctl --no-wait set in wan0 options:n_rxq=2 other_config:pmd-rxq-affinity=0:
 ovs-vsctl --no-wait set in wan1 options:n_rxq=2 other_config:pmd-rxq-affinity=0:4,1:6
 ovs-vsctl --no-wait set in wan2 options:n_rxq=2 other_config:pmd-rxq-affinity=0:7,1:8
 ovs-vsctl --no-wait set in wan3 options:n_rxq=2 other_config:pmd-rxq-affinity=0:9,1:10
+elif [[ $CPU_CORE == "2" ]]; then 
+echo ""
 else
 echo "Please define CPU_CORE"
 exit 1
@@ -108,11 +121,11 @@ fi
 #ovs-vsctl --no-wait set in wan2 options:mrg_rxbuf=off
 #ovs-vsctl --no-wait set in wan3 options:mrg_rxbuf=off
 
-#ovs-ofctl del-flows br0 
-#ovs-ofctl add-flow br0 in_port=wan0,action=output:wan1; 
-#ovs-ofctl add-flow br0 in_port=wan1,action=output:wan0; 
-#ovs-ofctl add-flow br0 in_port=wan2,action=output:wan3; 
-#ovs-ofctl add-flow br0 in_port=wan3,action=output:wan2; 
+ovs-ofctl del-flows br0
+ovs-ofctl add-flow br0 in_port=wan0,action=output:vhostwan0; 
+ovs-ofctl add-flow br0 in_port=vhostwan0,action=output:wan0; 
+ovs-ofctl add-flow br0 in_port=wan1,action=output:vhostwan1; 
+ovs-ofctl add-flow br0 in_port=vhostwan1,action=output:wan1; 
 
 #ovs-appctl upcall/disable-megaflows
 #ovs-appctl upcall/enable-megaflows
@@ -147,4 +160,4 @@ ovs-appctl dpif/show
 
 
 #watch -n 1 ovs-ofctl dump-ports br0
-./txcsr_83xx NIC_QSX_CQX_CFG -d -a0 -b0
+#~/cn83xx/txcsr_83xx NIC_QSX_CQX_CFG -d -a0 -b0
