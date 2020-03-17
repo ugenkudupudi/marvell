@@ -35,15 +35,19 @@ ovs-vsctl add-br br0 -- set Bridge br0 datapath_type=netdev
 ovs-vsctl add-port br0 wan0 -- set Interface wan0 type=dpdk \
     options:dpdk-devargs=0001:01:00.1 
 
-ovs-vsctl add-port br0 vhostwan0 -- set Interface vhostwan0 type=dpdkvhostuser 
+ovs-vsctl add-port br0 vhostwan0 -- set Interface vhostwan0 type=dpdkvhostuser \
+	options:dq-zero-copy=true
 
-ovs-vsctl add-port br0 vhostlo0 -- set Interface vhostlo0 type=dpdkvhostuser 
-ovs-vsctl add-port br0 vhostlo1 -- set Interface vhostlo1 type=dpdkvhostuser 
+ovs-vsctl add-port br0 vhostlo0 -- set Interface vhostlo0 type=dpdkvhostuser \
+	options:dq-zero-copy=true
+ovs-vsctl add-port br0 vhostlo1 -- set Interface vhostlo1 type=dpdkvhostuser \
+	options:dq-zero-copy=true
 
 ovs-vsctl add-port br0 wan1 -- set Interface wan1 type=dpdk \
     options:dpdk-devargs=0001:01:00.2 
 
-ovs-vsctl add-port br0 vhostwan1 -- set Interface vhostwan1 type=dpdkvhostuser 
+ovs-vsctl add-port br0 vhostwan1 -- set Interface vhostwan1 type=dpdkvhostuser \
+	options:dq-zero-copy=true
 
 ovs-ofctl del-flows br0
 ovs-ofctl add-flow br0 in_port=wan0,action=output:vhostwan0; 
