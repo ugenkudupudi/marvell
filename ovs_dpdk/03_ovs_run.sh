@@ -2,7 +2,7 @@
 
 export PATH=/usr/local/bin:/usr/local/sbin:$PATH
 
-CPU_CORE=12
+CPU_CORE=16
 
 ENABLE_SMC=n
 
@@ -13,8 +13,6 @@ rm -rf /var/log/ovs-vswitchd.log; rm -rf /usr/local/var/run/openvswitch/ ; rm -r
 ovsdb-server --remote=punix:/usr/local/var/run/openvswitch/db.sock --remote=db:Open_vSwitch,Open_vSwitch,manager_options --pidfile --detach 
 
 export DB_SOCK=/usr/local/var/run/openvswitch/db.sock 
-
-~/cn83xx/txcsr_83xx NIC_PF_CQM_CFG == 0x80
 
 # This value should be set before setting dpdk-init=true. 
 #ovs-vsctl --no-wait set Open_vSwitch . other_config:per-port-memory=true
@@ -51,19 +49,28 @@ echo "Please define CPU_CORE"
 exit 1
 fi
 
+#eth4
+wan0_pciaddr=0002:06:00.0
+#eth5
+wan1_pciaddr=0002:07:00.0
+#eth6
+wan2_pciaddr=0002:08:00.0
+#eth7
+wan3_pciaddr=0002:09:00.0
+
 ovs-vsctl add-br br0 -- set Bridge br0 datapath_type=netdev 
 
 ovs-vsctl add-port br0 wan0 -- set Interface wan0 type=dpdk \
-    options:dpdk-devargs=0001:01:00.1
+    options:dpdk-devargs=$wan0_pciaddr
 
 ovs-vsctl add-port br0 wan1 -- set Interface wan1 type=dpdk \
-    options:dpdk-devargs=0001:01:00.2
+    options:dpdk-devargs=$wan1_pciaddr
 
 ovs-vsctl add-port br0 wan2 -- set Interface wan2 type=dpdk \
-    options:dpdk-devargs=0001:01:00.3
+    options:dpdk-devargs=$wan2_pciaddr
 
 ovs-vsctl add-port br0 wan3 -- set Interface wan3 type=dpdk \
-    options:dpdk-devargs=0001:01:00.4
+    options:dpdk-devargs=$wan3_pciaddr
 
 if [[ $CPU_CORE == "16" ]]; then 
 # 4 queues and 16 cores
@@ -147,4 +154,3 @@ ovs-appctl dpif/show
 
 
 #watch -n 1 ovs-ofctl dump-ports br0
-~/cn83xx/txcsr_83xx NIC_QSX_CQX_CFG -d -a0 -b0
